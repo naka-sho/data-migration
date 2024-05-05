@@ -1,0 +1,20 @@
+in:
+  type: randomj
+  rows: 1000
+  threads: 1
+  primary_key: myid
+  schema:
+    - {name: myid,     type: long}
+    - {name: named,    type: string}
+    - {name: named_s,  type: string, length: 8}
+    - {name: x_flag,   type: boolean}
+    - {name: rate,     type: double, max_value: 100, min_value: -100}
+    - {name: score,    type: long, max_value: 255, min_value: 100}
+    - {name: time,     type: timestamp, format: '%Y-%m-%d %H:%M:%S'}
+    - {name: purchase, type: timestamp, format: '%Y/%m/%d'}
+out:
+  type: kafka
+  topic: "quickstart-events"
+  serialize_format: json
+  brokers:
+    - "localhost:9092"

@@ -1,0 +1,23 @@
+in:
+  type: randomj
+  rows: 10000000
+  threads: 1
+  primary_key: myid
+  schema:
+    - {name: myid,     type: long}
+    - {name: named,    type: string}
+    - {name: named_s,  type: string, length: 8}
+    - {name: x_flag,   type: boolean}
+    - {name: rate,     type: double, max_value: 100, min_value: -100}
+    - {name: score,    type: long, max_value: 255, min_value: 100}
+    - {name: time,     type: timestamp, format: '%Y-%m-%d %H:%M:%S'}
+    - {name: purchase, type: timestamp, format: '%Y/%m/%d'}
+out:
+  type: postgresql
+  host: postgres
+  user: postgres
+  password: postgres12345
+  database: postgres
+  table: your_table_name
+  mode: truncate_insert
+  driver_path: /opt/postgresql-42.7.2.jar

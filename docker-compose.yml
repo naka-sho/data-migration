@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  embulk:
+    container_name: embulk
+    build: .
+    volumes:
+      - .:/work
+    networks:
+      - db-network
+  postgres:
+    container_name: postgres
+    image: postgres:15.2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres12345
+      PGPASSWORD: postgres12345
+      POSTGRES_DB: postgres
+      TZ: "Asia/Tokyo"
+    ports:
+      - 5432:5432
+    networks:
+      - db-network
+networks:
+  db-network:
