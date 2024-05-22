@@ -17,6 +17,8 @@ services:
       PGPASSWORD: postgres12345
       POSTGRES_DB: postgres
       TZ: "Asia/Tokyo"
+    volumes:
+      - .:/work
     ports:
       - 5432:5432
     networks:
