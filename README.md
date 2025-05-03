@@ -15,6 +15,16 @@ make up
 
 ```shell
 docker exec -it embulk bash
+embulk gem install embulk -v 0.11.5
+embulk gem install msgpack
+embulk gem install bundler
+embulk gem install liquid
+#
+embulk gem install embulk-input-randomj
+#
+embulk gem install embulk-output-postgresql
+embulk gem install embulk-output-kafka
+
 embulk run sample.yml
 embulk run kafka.yml
 ```
