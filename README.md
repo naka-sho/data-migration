@@ -36,3 +36,23 @@ docker exec -it postgres psql -U postgres -d postgres -X -A -t -c "\i /work/test
 ```
 
 sample.ymlはあくまでサンプルです。
+
+## Kafka GUI ツール
+
+Kafka メッセージの送受信を確認するために、Kafka UI ツールが組み込まれています。
+
+```shell
+make up
+```
+
+コマンドでコンテナを起動した後、ブラウザで以下のURLにアクセスしてください：
+
+```
+http://localhost:8080
+```
+
+このインターフェースから以下のことができます：
+- Kafka トピックの閲覧と作成
+- メッセージの送受信の確認
+- コンシューマーグループの管理
+- その他の Kafka 関連の操作
