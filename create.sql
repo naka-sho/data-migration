@@ -1,10 +1,17 @@
 CREATE TABLE your_table_name (
-    myid SERIAL PRIMARY KEY,
-    named VARCHAR,
-    named_s VARCHAR(8),
-    x_flag BOOLEAN,
-    rate DOUBLE PRECISION,
-    score BIGINT ,
+    id BIGINT,
+    account BIGINT,
     time TIMESTAMP,
-    purchase DATE
+    purchase DATE,
+    comment VARCHAR,
+    tax_amount DOUBLE PRECISION
+);
+
+CREATE TABLE output_seatunnel (
+    id BIGINT,
+    account BIGINT,
+    time TIMESTAMP,
+    purchase DATE,
+    comment VARCHAR,
+    tax_amount DOUBLE PRECISION
 );

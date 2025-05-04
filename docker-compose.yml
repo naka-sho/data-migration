@@ -10,6 +10,18 @@ services:
       - db-network
     depends_on:
       - kafka-setup
+  seatunnel:
+    container_name: seatunnel
+    build:
+      context: .
+      dockerfile: Dockerfile.seatunnel
+    volumes:
+      - .:/work
+    networks:
+      - db-network
+    depends_on:
+      - kafka
+      - postgres
   postgres:
     container_name: postgres
     image: postgres:15.2

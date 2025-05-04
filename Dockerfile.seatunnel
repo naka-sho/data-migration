@@ -1,0 +1,37 @@
+FROM openjdk:8
+
+ENV TZ=Asia/Tokyo
+ENV SEATUNNEL_VERSION=2.3.3
+
+# Install Apache SeaTunnel
+RUN mkdir -p /opt/seatunnel && \
+    wget https://archive.apache.org/dist/seatunnel/${SEATUNNEL_VERSION}/apache-seatunnel-${SEATUNNEL_VERSION}-bin.tar.gz && \
+    tar -xzvf apache-seatunnel-${SEATUNNEL_VERSION}-bin.tar.gz -C /opt/seatunnel --strip-components=1 && \
+    rm apache-seatunnel-${SEATUNNEL_VERSION}-bin.tar.gz && \
+    ln -s /opt/seatunnel/bin/seatunnel.sh /usr/local/bin/seatunnel && \
+    chmod +x /usr/local/bin/seatunnel
+
+# Create directories for connectors and copy files
+# Copy PostgreSQL JDBC driver for database connectivity
+WORKDIR /opt/seatunnel/connectors/seatunnel
+WORKDIR /opt/seatunnel/lib
+WORKDIR /opt/seatunnel/plugins/jdbc/lib/
+
+COPY seatunnel-hadoop3-3.1.4-uber-2.3.2-optional.jar /opt/seatunnel/lib/seatunnel-hadoop3-3.1.4-uber-2.3.2-optional.jar
+COPY postgresql-42.7.2.jar /opt/seatunnel/connectors/seatunnel/postgresql-42.7.2.jar
+COPY postgresql-42.7.2.jar /opt/seatunnel/lib/postgresql-42.7.2.jar
+COPY postgresql-42.7.2.jar /opt/seatunnel/plugins/jdbc/lib/postgresql-42.7.2.jar
+
+# Install required connectors for SeaTunnel
+RUN cd /opt/seatunnel/connectors/seatunnel && \
+    wget https://repo1.maven.org/maven2/org/apache/seatunnel/connector-kafka/2.3.3/connector-kafka-2.3.3.jar && \
+    wget https://repo1.maven.org/maven2/org/apache/seatunnel/connector-jdbc/2.3.3/connector-jdbc-2.3.3.jar && \
+    wget https://repo1.maven.org/maven2/org/apache/seatunnel/connector-console/2.3.3/connector-console-2.3.3.jar && \
+    wget https://repo1.maven.org/maven2/com/sun/jersey/jersey-client/1.19.4/jersey-client-1.19.4.jar && \
+    wget https://repo1.maven.org/maven2/com/sun/jersey/jersey-core/1.19.4/jersey-core-1.19.4.jar && \
+    wget https://repo1.maven.org/maven2/javax/ws/rs/jsr311-api/1.1.1/jsr311-api-1.1.1.jar
+
+
+WORKDIR /work
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]
