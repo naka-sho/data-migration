@@ -43,16 +43,22 @@ seatunnel --config /work/seatunnel-config.conf --master local
 > また、PostgreSQL JDBC ドライバー（postgresql-42.7.2.jar）が SeaTunnel のクラスパスに配置されています。これは `java.lang.ClassNotFoundException: org.postgresql.Driver` エラーを解決するために必要です。
 >
 > Kafka からメッセージを正しく読み込むために、以下の設定が seatunnel-config.conf に追加されています：
-> - `consumer.group.id = "seatunnel-consumer-group"` - Kafka コンシューマーグループを指定
+> - `consumer.group.id = "SeaTunnel-Consumer-Group"` - Kafka コンシューマーグループを指定（内部的に使用される名前と一致させるために大文字を使用）
 > - `consumer.auto.offset.reset = "earliest"` - トピックの先頭からメッセージを読み込む
+> - `consumer.auto.offset.reset.policy = "earliest"` - 強制的にトピックの先頭からメッセージを読み込む
 > - `consumer.enable.auto.commit = "true"` - オフセットの自動コミットを有効化
-> - `consumer.poll.timeout = "5000"` - レコードのポーリングタイムアウトを5000msに設定
+> - `consumer.poll.timeout = "30000"` - レコードのポーリングタイムアウトを30000ms（30秒）に設定
 > - `option.ignoreParseErrors = "true"` - パースエラーを無視して処理を継続
 >
 > データベースへの挿入を確実に行うために、以下の設定も追加されています：
 > - フィールド名の一貫性を確保（`purchase_date` → `purchase`）- フィールド名とテーブルのカラム名を一致させる
 > - `batch_size = 1000` - バッチモードでの挿入を有効化して性能を向上
 > - `max_retries = 3` - 挿入失敗時に最大3回再試行
+>
+> **重要**: テーブルが存在しない場合、SeaTunnel はデータを挿入できません。test-seatunnel.sh スクリプトは自動的に必要なテーブルを作成します。手動でテストする場合は、先に以下のコマンドを実行してテーブルを作成してください：
+> ```shell
+> docker exec -it postgres psql -U postgres -d postgres -f /work/create.sql
+> ```
 
 このコマンドは以下の処理を行います：
 1. Kafka トピック "quickstart-events" からメッセージを読み込む
