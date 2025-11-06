@@ -16,7 +16,7 @@ import org.embulk.spi.Schema;
 
 /**
  * Dummy Filter Plugin for Embulk
- * This is a sample filter plugin that passes through all records without modification.
+ * This is a sample filter plugin that adds a suffix to all string columns.
  */
 public class DummyFilterPlugin implements FilterPlugin {
 
@@ -24,6 +24,10 @@ public class DummyFilterPlugin implements FilterPlugin {
         @Config("message")
         @ConfigDefault("\"Dummy filter applied\"")
         String getMessage();
+        
+        @Config("suffix")
+        @ConfigDefault("\"_dummy\"")
+        String getSuffix();
     }
 
     @Override
@@ -45,14 +49,16 @@ public class DummyFilterPlugin implements FilterPlugin {
             Schema outputSchema, PageOutput output) {
         PluginTask task = taskSource.loadTask(PluginTask.class);
         
-        return new DummyPageOutput(inputSchema, outputSchema, output);
+        return new DummyPageOutput(task, inputSchema, outputSchema, output);
     }
 
     public static class DummyPageOutput implements PageOutput {
+        private final PluginTask task;
         private final PageReader pageReader;
         private final PageBuilder pageBuilder;
 
-        public DummyPageOutput(Schema inputSchema, Schema outputSchema, PageOutput output) {
+        public DummyPageOutput(PluginTask task, Schema inputSchema, Schema outputSchema, PageOutput output) {
+            this.task = task;
             this.pageReader = new PageReader(inputSchema);
             this.pageBuilder = new PageBuilder(Exec.getBufferAllocator(), outputSchema, output);
         }
@@ -78,7 +84,10 @@ public class DummyFilterPlugin implements FilterPlugin {
                                 pageBuilder.setDouble(column, pageReader.getDouble(column));
                                 break;
                             case "string":
-                                pageBuilder.setString(column, pageReader.getString(column));
+                                // Add suffix to string values
+                                String originalValue = pageReader.getString(column);
+                                String modifiedValue = originalValue + task.getSuffix();
+                                pageBuilder.setString(column, modifiedValue);
                                 break;
                             case "timestamp":
                                 pageBuilder.setTimestamp(column, pageReader.getTimestamp(column));

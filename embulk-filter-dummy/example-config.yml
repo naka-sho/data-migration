@@ -25,6 +25,7 @@ in:
 filters:
   - type: dummy
     message: "ダミーフィルターでレコードを処理中"
+    suffix: "_dummy"
 
 out:
   type: stdout
