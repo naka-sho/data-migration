@@ -1,3 +1,5 @@
 .gradle
 .idea
 test.txt
+embulk-filter-dummy/build/
+embulk-filter-dummy/.gradle/
